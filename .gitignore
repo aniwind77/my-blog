@@ -1,3 +1,5 @@
-.claude/
+.claude/*
+!.claude/skills/
+!.claude/skills/**
 scripts/publish.log
 .DS_Store
