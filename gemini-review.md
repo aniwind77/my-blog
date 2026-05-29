@@ -165,18 +165,54 @@ The file lacks specific dark mode overrides for its unique UI elements. The canv
 
 ## Summary Table
 
-| # | Severity | File | Finding |
-|---|----------|------|---------|
-| 1 | Critical | `js/post.js:84` | XSS via unsanitized `marked.parse()` output |
-| 2 | Critical | `js/main.js:13-25` | XSS via `innerHTML` with raw post metadata |
-| 3 | Critical | `js/post.js:94-102` | XSS via `location.hash` slug in error display |
-| 4 | High | `js/pixel-art.js` | Palette swatches have no `aria-label` |
-| 5 | High | `js/post.js:15-32` | Frontmatter parser breaks on colons in values |
-| 6 | Medium | `js/theme.js:5` | Theme toggle `aria-label` is static |
-| 7 | Medium | `js/2048.js:129` | Arrow keys hijacked globally (blocks page scroll) |
-| 8 | Medium | `js/pixel-art.js` | Grid lines erased while painting |
-| 9 | Medium | `js/pixel-art.js` | No path interpolation → dotted strokes |
-| 10 | Medium | `css/syntax.css` | Dark-theme token colors leak into light mode |
-| 11 | Low | `css/style.css` | Tables/pre blocks overflow on mobile |
-| 12 | Low | `js/main.js:7` | Date timezone offset may shift day by -1 |
-| 13 | Low | `js/post.js` | `renderTags()` called twice redundantly |
+| # | Severity | File | Finding | 처리 |
+|---|----------|------|---------|------|
+| 1 | Critical | `js/post.js:84` | XSS via unsanitized `marked.parse()` output | 스킵 |
+| 2 | Critical | `js/main.js:13-25` | XSS via `innerHTML` with raw post metadata | **수정** |
+| 3 | Critical | `js/post.js:94-102` | XSS via `location.hash` slug in error display | **수정** |
+| 4 | High | `js/pixel-art.js` | Palette swatches have no `aria-label` | 스킵 |
+| 5 | High | `js/post.js:15-32` | Frontmatter parser breaks on colons in values | 스킵 (오진단) |
+| 6 | Medium | `js/theme.js:5` | Theme toggle `aria-label` is static | **수정** |
+| 7 | Medium | `js/2048.js:129` | Arrow keys hijacked globally (blocks page scroll) | 스킵 |
+| 8 | Medium | `js/pixel-art.js` | Grid lines erased while painting | 스킵 |
+| 9 | Medium | `js/pixel-art.js` | No path interpolation → dotted strokes | 스킵 |
+| 10 | Medium | `css/syntax.css` | Dark-theme token colors leak into light mode | 스킵 |
+| 11 | Low | `css/style.css` | Tables/pre blocks overflow on mobile | **수정** |
+| 12 | Low | `js/main.js:7` | Date timezone offset may shift day by -1 | 스킵 (오진단) |
+| 13 | Low | `js/post.js` | `renderTags()` called twice redundantly | **수정** |
+
+---
+
+## 스킵 이유
+
+### #1 — XSS via `marked.parse()` (`js/post.js:84`)
+
+`marked.parse(body)` 결과를 `innerHTML`에 직접 삽입하는 것은 사실이지만, `body`는 서버가 아닌 로컬 `.md` 파일에서 읽어온다. 이 블로그는 정적 파일 기반의 개인 블로그로, 마크다운 파일 작성자와 독자가 동일인이다. 외부 사용자가 임의의 마크다운을 업로드할 수 있는 경로가 없으므로 XSS 벡터가 성립하지 않는다. DOMPurify 같은 외부 의존성을 추가하는 것은 이 규모에서 과도하다.
+
+### #4 — Palette swatches have no `aria-label` (`js/pixel-art.js`)
+
+타당한 지적이다. 다만 픽셀 아트 에디터는 시각 중심 도구로, 색상 팔레트 32개 각각에 `aria-label`을 붙이려면 색상 이름 매핑 테이블이 필요하다(hex → 한국어 색상명). 현재 팔레트는 고정된 32색 배열이므로 추후 별도 작업으로 처리한다.
+
+### #5 — Frontmatter parser breaks on colons (`js/post.js:15-32`) — 오진단
+
+Gemini는 `title: "My Blog: A New Start"` 같은 값이 잘못 파싱된다고 했으나, 실제 코드는 `line.indexOf(':')` 로 첫 번째 콜론의 인덱스만 찾고, 그 이후 문자열 전체(`line.slice(colon + 1)`)를 값으로 취한다. 즉 `key = "title"`, `val = '"My Blog: A New Start"'`로 올바르게 파싱된다. 실제 버그가 아니다.
+
+### #7 — Arrow keys hijacked globally (`js/2048.js:129`)
+
+`games/2048.html`은 2048 게임 전용 페이지다. 이 페이지에서 방향키가 게임 입력으로 동작하는 것은 의도된 UX이고, 사용자가 스크롤 대신 게임을 조작하기 위해 접속한 상황이다. `document.activeElement` 기반으로 포커스를 체크하는 방식으로 개선할 수 있지만, 전용 게임 페이지에서 이 트레이드오프는 현재 허용 가능한 수준이다.
+
+### #8 — Grid lines erased while painting (`js/pixel-art.js`)
+
+타당한 버그다. `drawCell()`에서 `clearRect()` 후 셀을 채우면 그 위를 덮는 그리드 선이 지워진다. 수정하려면 `drawCell()` 내부에서 그리드 선 일부를 다시 그려야 하는데, 현재 그리드는 캔버스 전체를 한 번에 그리는 방식이라 셀 단위 재드로우 로직이 없다. 렌더 아키텍처를 변경해야 하므로 현재 범위에서 스킵한다.
+
+### #9 — No path interpolation (`js/pixel-art.js`)
+
+빠른 마우스 이동 시 점선처럼 그려지는 것은 실제 UX 문제다. Bresenham 선 알고리즘 등으로 이전·현재 좌표 사이를 보간해야 한다. 알고리즘 추가와 이전 좌표 상태 관리가 필요하므로 별도 작업으로 분리한다.
+
+### #10 — Syntax highlighting dark-theme leak (`css/syntax.css`)
+
+`post.html`이 CDN에서 로드하는 highlight.js 테마가 다크 테마 기반이라, 라이트 모드에서 토큰 색상이 어색할 수 있다. 수정하려면 라이트/다크 모드에 따라 CDN stylesheet를 동적으로 교체하거나, `syntax.css`에 토큰 색상 규칙을 전부 오버라이드해야 한다. 현재 블로그에서 코드 블록 가독성이 심각하게 깨지는 수준은 아니므로 별도 작업으로 미룬다.
+
+### #12 — Date timezone offset (`js/main.js:7`) — 오진단
+
+Gemini는 `new Date(dateStr + 'T00:00:00')`가 UTC 변환 때문에 하루가 밀릴 수 있다고 했으나, `'T00:00:00'`을 붙이면 브라우저는 이를 **로컬 타임존 자정**으로 파싱한다. UTC 문제가 발생하는 것은 `new Date('2026-05-29')`처럼 시간 없이 날짜만 넘길 때(UTC 자정으로 파싱)이며, 현재 코드는 이를 이미 올바르게 회피하고 있다.
