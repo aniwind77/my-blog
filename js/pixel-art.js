@@ -19,6 +19,7 @@ let currentColor = PALETTE[0]
 let eraserMode = false
 let showGrid = true
 let isPainting = false
+let prevCell = null
 
 const canvas = document.getElementById('pixel-canvas')
 const ctx = canvas.getContext('2d')
@@ -57,13 +58,6 @@ function getCanvasPos(clientX, clientY) {
 		x: (clientX - rect.left) * scaleX,
 		y: (clientY - rect.top) * scaleY,
 	}
-}
-
-function getPixelIndex(x, y) {
-	const col = Math.floor(x / CELL_SIZE)
-	const row = Math.floor(y / CELL_SIZE)
-	if (col < 0 || col >= GRID_SIZE || row < 0 || row >= GRID_SIZE) return -1
-	return row * GRID_SIZE + col
 }
 
 // ── 렌더링 ───────────────────────────────────────────────────
@@ -105,18 +99,42 @@ function renderAll() {
 
 // ── 도구 동작 ────────────────────────────────────────────────
 
+function bresenham(col1, row1, col2, row2) {
+	const cells = []
+	let x = col1, y = row1
+	const dx = Math.abs(col2 - col1), dy = Math.abs(row2 - row1)
+	const sx = col1 < col2 ? 1 : -1, sy = row1 < row2 ? 1 : -1
+	let err = dx - dy
+	while (true) {
+		cells.push(y * GRID_SIZE + x)
+		if (x === col2 && y === row2) break
+		const e2 = 2 * err
+		if (e2 > -dy) { err -= dy; x += sx }
+		if (e2 < dx) { err += dx; y += sy }
+	}
+	return cells
+}
+
 function paint(clientX, clientY) {
 	if (!isPainting) return
 	const { x, y } = getCanvasPos(clientX, clientY)
-	const idx = getPixelIndex(x, y)
-	if (idx === -1) return
-	pixels[idx] = eraserMode ? '' : currentColor
-	drawCell(idx)
+	const col = Math.floor(x / CELL_SIZE)
+	const row = Math.floor(y / CELL_SIZE)
+	if (col < 0 || col >= GRID_SIZE || row < 0 || row >= GRID_SIZE) {
+		prevCell = null
+		return
+	}
+	const cells = prevCell
+		? bresenham(prevCell.col, prevCell.row, col, row)
+		: [row * GRID_SIZE + col]
+	cells.forEach(idx => { pixels[idx] = eraserMode ? '' : currentColor })
+	prevCell = { col, row }
+	renderAll()
 }
 
 function stopPaint() {
 	isPainting = false
-	drawGrid()
+	prevCell = null
 }
 
 function toggleEraser() {
