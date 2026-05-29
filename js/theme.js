@@ -3,7 +3,10 @@ const STORAGE_KEY = 'blog-theme'
 function applyTheme(theme) {
 	document.documentElement.setAttribute('data-theme', theme)
 	const btn = document.getElementById('theme-toggle')
-	if (btn) btn.textContent = theme === 'dark' ? '☀' : '🌙'
+	if (btn) {
+		btn.textContent = theme === 'dark' ? '☀' : '🌙'
+		btn.setAttribute('aria-label', theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환')
+	}
 }
 
 function getSystemTheme() {

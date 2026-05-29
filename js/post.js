@@ -7,6 +7,14 @@ const metaEl = document.getElementById('post-meta')
 const bodyEl = document.getElementById('post-body')
 const pageTitleEl = document.querySelector('title')
 
+function escapeHtml(str) {
+	return str
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+}
+
 function formatDate(dateStr) {
 	const d = new Date(dateStr + 'T00:00:00')
 	return d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -34,7 +42,7 @@ function parseFrontmatter(raw) {
 
 function renderTags(tags) {
 	if (!tags?.length) return ''
-	return tags.map(t => `<span class="tag">${t}</span>`).join('')
+	return tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')
 }
 
 async function loadPost() {
@@ -66,9 +74,10 @@ async function loadPost() {
 	if (pageTitleEl) pageTitleEl.textContent = `${title} — My Blog`
 	titleEl.textContent = title
 
+	const tagsHtml = renderTags(tags)
 	metaEl.innerHTML = `
 		${dateStr ? `<span>${dateStr}</span>` : ''}
-		${renderTags(tags) ? `<span class="post-tags">${renderTags(tags)}</span>` : ''}
+		${tagsHtml ? `<span class="post-tags">${tagsHtml}</span>` : ''}
 	`
 
 	// marked.js is loaded via CDN script tag
@@ -87,8 +96,8 @@ function showError(heading, detail) {
 	metaEl.innerHTML = ''
 	bodyEl.innerHTML = `
 		<div class="error-state">
-			<h2>${heading}</h2>
-			<p>${detail}</p>
+			<h2>${escapeHtml(heading)}</h2>
+			<p>${escapeHtml(detail)}</p>
 			<p><a href="index.html">목록으로 돌아가기</a></p>
 		</div>
 	`

@@ -4,6 +4,14 @@ initTheme()
 
 const listEl = document.getElementById('post-list')
 
+function escapeHtml(str) {
+	return str
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+}
+
 function formatDate(dateStr) {
 	const d = new Date(dateStr + 'T00:00:00')
 	return d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -14,14 +22,14 @@ function renderCard(post) {
 	a.className = 'post-card'
 	a.href = `post.html#${encodeURIComponent(post.slug)}`
 
-	const tags = (post.tags ?? []).map(t => `<span class="tag">${t}</span>`).join('')
+	const tags = (post.tags ?? []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')
 
 	a.innerHTML = `
-		<div class="post-card-title">${post.title}</div>
+		<div class="post-card-title">${escapeHtml(post.title)}</div>
 		<div class="post-card-meta">
 			<span>${formatDate(post.date)}</span>
 		</div>
-		${post.description ? `<div class="post-card-desc">${post.description}</div>` : ''}
+		${post.description ? `<div class="post-card-desc">${escapeHtml(post.description)}</div>` : ''}
 		${tags ? `<div class="post-tags">${tags}</div>` : ''}
 	`
 	return a
