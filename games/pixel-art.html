@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>픽셀 아트 — My Blog</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/pixel-art.css">
+</head>
+<body>
+	<header class="site-header">
+		<div class="container">
+			<a href="../index.html" class="site-title">My Blog</a>
+			<nav class="site-nav">
+				<a href="2048.html" class="nav-link">2048</a>
+				<a href="pixel-art.html" class="nav-link">픽셀 아트</a>
+			</nav>
+			<button id="theme-toggle" aria-label="테마 전환">🌙</button>
+		</div>
+	</header>
+
+	<main>
+		<div class="container">
+			<div class="editor-page-header">
+				<h1>픽셀 아트</h1>
+				<p class="editor-desc">16×16 격자에 도트를 찍어 그림을 그려보세요.</p>
+			</div>
+
+			<div class="editor-layout">
+				<div class="canvas-area">
+					<div class="toolbar">
+						<button id="btn-eraser">지우개</button>
+						<button id="btn-grid" class="tool-active">격자선</button>
+						<button id="btn-clear">전체 지우기</button>
+						<button id="btn-save">저장</button>
+					</div>
+					<canvas id="pixel-canvas" width="512" height="512"></canvas>
+				</div>
+
+				<div class="palette-panel">
+					<div id="color-preview"></div>
+					<input type="color" id="color-custom" value="#000000">
+					<div class="palette-grid" id="palette-grid"></div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<footer class="site-footer">
+		<div class="container">
+			<span>My Blog</span>
+		</div>
+	</footer>
+
+	<script type="module" src="../js/theme.js"></script>
+	<script type="module" src="../js/pixel-art.js"></script>
+</body>
+</html>
