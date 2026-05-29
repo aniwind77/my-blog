@@ -1,0 +1,16 @@
+[
+	{
+		"slug": "2026-05-29-today-i-learned",
+		"title": "오늘 배운 것",
+		"date": "2026-05-29",
+		"description": "클로드 코드로 블로그를 만들면서 HTML, CSS, JavaScript가 각각 어떤 역할을 하는지 정리했다.",
+		"tags": ["til", "web"]
+	},
+	{
+		"slug": "hello-world",
+		"title": "Hello, aniwind!",
+		"date": "2026-05-29",
+		"description": "마크다운 블로그의 첫 번째 포스트입니다. 지원하는 문법을 모두 확인해보세요.",
+		"tags": ["general", "markdown"]
+	}
+]
