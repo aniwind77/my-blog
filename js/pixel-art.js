@@ -14,6 +14,17 @@ const PALETTE = [
 	'#ff4500', '#32cd32', '#1e90ff', '#ff1493',
 ]
 
+const PALETTE_NAMES = [
+	'검정', '흰색', '회색', '은색',
+	'빨강', '주황', '노랑', '연두',
+	'청록', '파랑', '마젠타', '보라',
+	'진한 빨강', '갈색', '올리브', '초록',
+	'어두운 청록', '남색', '자주', '인디고',
+	'연한 빨강', '살구색', '연한 노랑', '연한 초록',
+	'연한 청록', '연한 파랑', '연한 마젠타', '황금색',
+	'주홍', '라임 그린', '하늘색', '딥 핑크',
+]
+
 let pixels = Array(GRID_SIZE * GRID_SIZE).fill('')
 let currentColor = PALETTE[0]
 let eraserMode = false
@@ -28,11 +39,12 @@ const ctx = canvas.getContext('2d')
 
 function buildPalette() {
 	const grid = document.getElementById('palette-grid')
-	PALETTE.forEach(hex => {
+	PALETTE.forEach((hex, i) => {
 		const btn = document.createElement('button')
 		btn.className = 'swatch'
 		btn.style.background = hex
 		btn.dataset.color = hex
+		btn.setAttribute('aria-label', PALETTE_NAMES[i])
 		btn.addEventListener('click', () => selectColor(hex))
 		grid.appendChild(btn)
 	})

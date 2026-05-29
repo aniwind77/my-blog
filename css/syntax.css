@@ -1,22 +1,8 @@
-/* Highlight.js overrides — ensure code blocks use our tokens */
+/* Highlight.js layout overrides — theme colors come from the dynamically-switched CDN stylesheet */
 .hljs {
 	padding: 1.125rem 1.25rem;
 	font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
 	font-size: 0.875rem;
 	line-height: 1.65;
 	border-radius: 8px;
-}
-
-/* Light mode: github light theme from CDN, slight tweak */
-[data-theme="light"] .hljs,
-:root:not([data-theme="dark"]) .hljs {
-	background: #f6f8fa;
-	color: #24292e;
-}
-
-@media (prefers-color-scheme: light) {
-	:root:not([data-theme="dark"]) .hljs {
-		background: #f6f8fa;
-		color: #24292e;
-	}
 }
