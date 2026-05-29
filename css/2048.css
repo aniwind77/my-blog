@@ -89,7 +89,13 @@
 }
 
 .game-controls {
-	margin-bottom: 1rem;
+	margin-bottom: 0.75rem;
+}
+
+.game-hint {
+	font-size: 0.85rem;
+	color: var(--text-muted);
+	margin: 0 0 1rem;
 }
 #new-game-btn, #retry-btn {
 	background: var(--accent);
