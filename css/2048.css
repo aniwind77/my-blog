@@ -1,0 +1,200 @@
+/* 타일 색상 변수 */
+:root {
+	--tile-text-light: #776e65;
+	--tile-text-dark: #f9f6f2;
+
+	--tile-2:    #eee4da;   --tile-text-2:    var(--tile-text-light);
+	--tile-4:    #ede0c8;   --tile-text-4:    var(--tile-text-light);
+	--tile-8:    #f2b179;   --tile-text-8:    var(--tile-text-dark);
+	--tile-16:   #f59563;   --tile-text-16:   var(--tile-text-dark);
+	--tile-32:   #f67c5f;   --tile-text-32:   var(--tile-text-dark);
+	--tile-64:   #f65e3b;   --tile-text-64:   var(--tile-text-dark);
+	--tile-128:  #edcf72;   --tile-text-128:  var(--tile-text-dark);
+	--tile-256:  #edcc61;   --tile-text-256:  var(--tile-text-dark);
+	--tile-512:  #edc850;   --tile-text-512:  var(--tile-text-dark);
+	--tile-1024: #edc53f;   --tile-text-1024: var(--tile-text-dark);
+	--tile-2048: #edc22e;   --tile-text-2048: var(--tile-text-dark);
+	--tile-super: #3c3a32;  --tile-text-super: var(--tile-text-dark);
+}
+
+/* 다크모드 타일 색상 재정의 */
+[data-theme="dark"] {
+	--tile-2:    #3a3530;
+	--tile-4:    #47403a;
+	--tile-8:    #8f4f20;
+	--tile-16:   #a0471a;
+	--tile-32:   #b03c22;
+	--tile-64:   #c0301a;
+	--tile-128:  #9b8a1e;
+	--tile-256:  #a09020;
+	--tile-512:  #a09420;
+	--tile-1024: #9c9020;
+	--tile-2048: #b09000;
+	--tile-super: #c0b050;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--tile-2:    #3a3530;
+		--tile-4:    #47403a;
+		--tile-8:    #8f4f20;
+		--tile-16:   #a0471a;
+		--tile-32:   #b03c22;
+		--tile-64:   #c0301a;
+		--tile-128:  #9b8a1e;
+		--tile-256:  #a09020;
+		--tile-512:  #a09420;
+		--tile-1024: #9c9020;
+		--tile-2048: #b09000;
+		--tile-super: #c0b050;
+	}
+}
+
+.game-header {
+	margin-bottom: 1.5rem;
+}
+.game-header h1 {
+	margin: 0 0 0.25rem;
+}
+.game-desc {
+	font-size: 0.9rem;
+	color: var(--text-muted);
+	margin: 0;
+}
+
+.scoreboard {
+	display: flex;
+	gap: 0.75rem;
+	margin-bottom: 1rem;
+}
+.score-box {
+	background: var(--bg-surface);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	padding: 0.5rem 1rem;
+	min-width: 80px;
+	text-align: center;
+}
+.score-label {
+	display: block;
+	font-size: 0.7rem;
+	text-transform: uppercase;
+	color: var(--text-muted);
+	letter-spacing: 0.05em;
+}
+.score-value {
+	display: block;
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--text);
+}
+
+.game-controls {
+	margin-bottom: 1rem;
+}
+#new-game-btn, #retry-btn {
+	background: var(--accent);
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 0.5rem 1.25rem;
+	cursor: pointer;
+	font-size: 0.9375rem;
+	font-weight: 600;
+}
+#new-game-btn:hover, #retry-btn:hover {
+	opacity: 0.85;
+}
+
+.board-wrapper {
+	position: relative;
+	display: inline-block;
+}
+.board {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+	padding: 10px;
+	background: var(--border);
+	border-radius: 10px;
+	width: min(460px, 92vw);
+	box-sizing: border-box;
+}
+.cell {
+	background: var(--bg-surface);
+	border-radius: 6px;
+	aspect-ratio: 1 / 1;
+	position: relative;
+}
+
+.tile {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 6px;
+	font-weight: 700;
+}
+.tile.fs-md { font-size: 1.75rem; }
+.tile.fs-sm { font-size: 1.25rem; }
+.tile.fs-xs { font-size: 1rem; }
+
+/* 타일별 색상 */
+.tile-2    { background: var(--tile-2);    color: var(--tile-text-2); }
+.tile-4    { background: var(--tile-4);    color: var(--tile-text-4); }
+.tile-8    { background: var(--tile-8);    color: var(--tile-text-8); }
+.tile-16   { background: var(--tile-16);   color: var(--tile-text-16); }
+.tile-32   { background: var(--tile-32);   color: var(--tile-text-32); }
+.tile-64   { background: var(--tile-64);   color: var(--tile-text-64); }
+.tile-128  { background: var(--tile-128);  color: var(--tile-text-128); }
+.tile-256  { background: var(--tile-256);  color: var(--tile-text-256); }
+.tile-512  { background: var(--tile-512);  color: var(--tile-text-512); }
+.tile-1024 { background: var(--tile-1024); color: var(--tile-text-1024); }
+.tile-2048 { background: var(--tile-2048); color: var(--tile-text-2048); }
+.tile-super { background: var(--tile-super); color: var(--tile-text-super); }
+
+/* 오버레이 */
+.game-message {
+	position: absolute;
+	inset: 0;
+	border-radius: 10px;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	background: rgba(238, 228, 218, 0.73);
+}
+.game-message.visible {
+	display: flex;
+}
+.game-message.game-message-win {
+	background: rgba(237, 194, 46, 0.5);
+}
+
+[data-theme="dark"] .game-message { background: rgba(15, 15, 15, 0.8); }
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .game-message { background: rgba(15, 15, 15, 0.8); }
+}
+
+[data-theme="dark"] .game-message.game-message-win { background: rgba(150, 120, 0, 0.5); }
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .game-message.game-message-win { background: rgba(150, 120, 0, 0.5); }
+}
+
+#game-message-text {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--text);
+	margin: 0;
+}
+
+@media (max-width: 480px) {
+	.board {
+		gap: 7px;
+		padding: 7px;
+	}
+	.tile.fs-md { font-size: 1.3rem; }
+	.tile.fs-sm { font-size: 1rem; }
+	.tile.fs-xs { font-size: 0.8rem; }
+}
